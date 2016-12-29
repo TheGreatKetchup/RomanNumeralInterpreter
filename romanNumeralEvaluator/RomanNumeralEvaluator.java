@@ -72,8 +72,66 @@ public class RomanNumeralEvaluator {
 		return romanNumeral;
 	}
 	
-	public int convertRomanNumeralToNumber(String romanNumeral) {
-		return 0;
+	public int convertRomanNumeralToNumber(String romanNumeral) throws IllegalArgumentException {
+		if (romanNumeral.length() > 200) {
+			//Long String, shouldn't be that long.
+			throw new IllegalArgumentException(
+					"String should not be longer than 200 characters.");
+		}
+		romanNumeral = romanNumeral.toUpperCase(); //All UpperCase
+		
+		int number = 0;
+		int maxValue = 0;
+		int charValue;
+		
+		//We iterate backward.
+		//XIXVX
+		//<----
+		for (int i = romanNumeral.length() - 1; i >= 0; i--) {
+			//Switch Possible Characters
+			switch ( romanNumeral.charAt(i) ) {
+				case 'M': charValue = 1000; break;
+				case 'D': charValue = 500; break;
+				case 'C': charValue = 100; break;
+				case 'L': charValue = 50; break;
+				case 'X': charValue = 10; break;
+				case 'V': charValue = 5; break;
+				case 'I': charValue = 1; break;
+				default:
+					//Not Valid Character.
+					throw new IllegalArgumentException(
+							"Roman Numerals can not have the character: " 
+							+ romanNumeral.charAt(i));
+			}
+			if (maxValue < charValue) {
+				//Example Situation: XXI    XIX
+				//                   <--    <--
+				//                    ^      Does not happen.
+				//                    |
+				//This is actually normal. Update max value and add the value to number.
+				maxValue = charValue;
+				number += charValue;
+			} else if (maxValue == charValue) {
+				///Example Situation: XXI  IXX
+				//                    <--  <--
+				//                    ^    ^
+				//                    |    |
+				//Two numbers in a row, this is valid.
+				number += charValue;
+			} else {
+				//Example Situation: IXX    IVX
+				//                   ^       ^
+				//                   |       |
+				//So this value is less then a number we have already seen.
+				//This is a subtraction, not an addition.
+				number -= charValue;
+				
+				
+			}
+			maxValue = Math.max(charValue, maxValue);
+				
+		}
+		return number;
 		
 	}
 	
