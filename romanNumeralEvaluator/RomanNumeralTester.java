@@ -12,5 +12,4 @@ public class RomanNumeralTester {
 		System.out.print("XXII in decimal is ");
 		System.out.println(numeralConverter.convertRomanNumeralToNumber("XXII"));
 	}
-
 }
